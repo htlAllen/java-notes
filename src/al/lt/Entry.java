@@ -12,9 +12,6 @@ public class Entry{
 //        System.out.println(test.maxDepth(root));
 //        System.out.println(test.bdfMaxDepth(root));
 //        System.out.println(test.bfs2(root));
-
-
-
     }
 }
 // 其他
