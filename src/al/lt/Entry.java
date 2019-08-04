@@ -12,10 +12,15 @@ public class Entry{
 //        System.out.println(test.maxDepth(root));
 //        System.out.println(test.bdfMaxDepth(root));
 //        System.out.println(test.bfs2(root));
+//        System.out.println(Arrays.toString(Others.maxSlidingWindow(new int[]{1,3,-1,-3,5,3,6,7}, 3)));
+        int[] a = new int[1];
+        System.out.println(Arrays.toString(a));
     }
 }
 // 其他
 class Others{
+    // 求解两数之和
+    // 关键是使用了contains函数，其实本质上一个循环
     public static String twoSum(int[] nums, int target){
         int[] ans = new int[2];
         HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
@@ -34,6 +39,7 @@ class Others{
         return Arrays.toString(ans);
     }
     // 不重复最小子串长度
+    // 关键是使用了位置标识left，right,并且right-left的值就表示为子串的长度
     public static int lengthOfLongestSubstring(String s){
         Set<Character> set = new HashSet<Character>();
         int left=0, right=0, ans=0, n=s.length();
@@ -50,6 +56,56 @@ class Others{
             }
         }
         return ans;
+    }
+
+    // K个不同整数的子数组,暴力破解
+    public static int subarraysWithKDistinct(int[] A, int K){
+        int n = 0;
+        for(int i = 0; i < A.length; i++){
+            Set<Integer> set = new HashSet<Integer>();
+            for(int j = i; j < A.length; j++){
+                set.add(A[j]);
+                if(set.size() == K){
+                    n++;
+                }
+            }
+        }
+        return n;
+    }
+
+    // 滑动窗口的最大值
+    public static int[] maxSlidingWindow(int[] nums, int k) {
+        int n = nums.length;
+        if (n * k == 0) return new int[0];
+        // 0. 初始化变量
+        int[] res = new int[nums.length - k + 1];
+        int right = k, index=0;
+        // 1. 初始化滑动窗口
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        for(int i = 0; i < k; i++){
+            list.add(nums[i]);
+        }
+        res[index++] = Collections.max(list);
+        while(right < nums.length){
+            list.remove(0);
+            list.add(nums[right++]);
+            res[index++] = Collections.max(list);
+        }
+        return res;
+    }
+    public static int[] maxSlidingWindow2(int[] nums, int k) {
+        // 0. 初始化变量
+        int n = nums.length;
+        if (n * k == 0) return new int[0];
+        int[] res = new int[nums.length - k + 1];
+        for(int i=0; i < nums.length - k + 1; i++){
+            int max = Integer.MIN_VALUE;
+            for(int j = i; j < k + i; j++){
+                max = Math.max(max, nums[j]);
+            }
+            res[i] = max;
+        }
+        return res;
     }
     // 宝石与石头之HashSet
     public static int numJewelsInstores(String J, String S){

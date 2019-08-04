@@ -63,9 +63,9 @@ Set<Map.Entry<K, V>> entrySet() | 略
 
 1.List
 
-1.1 ArrayList:对数据进行了封装
+1.1 ArrayList:对数组进行了封装，其动态增长是通过Array.copyOf来实现的
 
-1.2 LinkedList:实现了链表的数据结构
+1.2 LinkedList:实现了链表的数据结构，其内部定义了节点的类，然后LinkedList保留了指向链头节点的指针和指向链尾节点的指针，而堆栈等api如pop，push，offer，poll等实现是因为其Deque接口
 
 
 ---
