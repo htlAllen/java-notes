@@ -4,6 +4,7 @@ import sun.reflect.generics.tree.Tree;
 
 import java.util.*;
 
+
 public class Entry{
     public static void main(String[] args){
 //        // 树相关的测试
@@ -13,12 +14,98 @@ public class Entry{
 //        System.out.println(test.bdfMaxDepth(root));
 //        System.out.println(test.bfs2(root));
 //        System.out.println(Arrays.toString(Others.maxSlidingWindow(new int[]{1,3,-1,-3,5,3,6,7}, 3)));
-        int[] a = new int[1];
-        System.out.println(Arrays.toString(a));
+
+        // 修改字串的值
+        char[] q = {'b', 'c', 'w', 'a'};
+        System.out.println(Arrays.toString(q));
+        Arrays.sort(q);
+        System.out.println(Arrays.toString(q));
+        String test = "hello world";
+        char[] testChar = test.toCharArray();
+        testChar[0] = 'H';
+        String test2 = String.valueOf(testChar);
+        System.out.println(test2);
+        ArrayList<String> ww = new ArrayList<String>();
+        ww.add("qqqq");
+        ww.add("wwww");
+        System.out.println(ww);
+        Others qqq = new Others();
+        String[] qq = {"eat", "tea", "tan", "ate", "nat", "bat"};
+        qqq.groupAnagrams(qq);
+        qqq.groupAnagrams2(qq);
+        qqq.toLowerCase("HELLO");
+        char[] aaa = {'a', 'b', 'c', 'd'};
+        qqq.reverseString(aaa);
+
     }
 }
 // 其他
 class Others{
+
+    // 8.6 反转字符串
+    public void reverseString(char[] s){
+        int first=0, last=s.length - 1;
+        char tmp;
+        while(first < last){
+            tmp = s[last];
+            s[last] = s[first];
+            s[first] = tmp;
+            first++;
+            last--;
+        }
+      System.out.println(Arrays.toString(s));
+    }
+    // 8.6 将String中的大写字母转为小写
+    public void toLowerCase(String str){
+        char[] ch = str.toCharArray();
+        for(int i=0; i < ch.length; i++){
+            if (ch[i] <= 'Z' && ch[i] >= 'A'){
+                ch[i] =  (char)(ch[i] + 32);
+            }
+        }
+        System.out.println(String.valueOf(ch));
+    }
+    // 8.6 字母异位分组--按照计数作为key--非常普通的解法
+    public void groupAnagrams(String[] args){
+        HashMap<String, List<String>> x =  new HashMap<String, List<String>>();
+        int[] m = new int[26];
+        for(String str: args){
+            // 这一步数组初始化也很棒啊
+            Arrays.fill(m, 0);
+            for(char c: str.toCharArray()){
+                // 这一步精辟啊！ 用数组的下标标识26个字母，用数组的值来标识字母出现的次数
+                m[c - 'a']++;
+            }
+            // 这一步完全没有必要啊，只要想办法把整型数组转化位String类型就可以了啊,StringBuilder与String的区别在于StringBuild可以修改字符串的值
+            // 直接如下转化成String就可以了
+//            StringBuilder sb = new StringBuilder("");
+//            for(int i=0; i<26; i++){
+//                sb.append("#");
+//                sb.append(m[i]);
+//            }
+            // 把数组转化位String
+            String key = Arrays.toString(m);
+            if(!x.containsKey(key)){
+                x.put(key, new ArrayList<String>());
+            }
+            x.get(key).add(str);
+        }
+        System.out.println(x.values());
+        System.out.println(new ArrayList<>(x.values()));
+    }
+    // 8.6 字符异位分组--按照排序分组--- 非常普通的解法
+    public void groupAnagrams2(String[] args){
+        HashMap<String, List<String>> x = new HashMap<String, List<String>>();
+        for(String str: args){
+            char[] strChar = str.toCharArray();
+            Arrays.sort(strChar);
+            if(!x.containsKey(Arrays.toString(strChar))){
+                x.put(Arrays.toString(strChar), new ArrayList<String>());
+            }
+            x.get(Arrays.toString(strChar)).add(str);
+        }
+        System.out.println(x.values());
+    }
     // 求解两数之和
     // 关键是使用了contains函数，其实本质上一个循环
     public static String twoSum(int[] nums, int target){
