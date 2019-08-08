@@ -2,6 +2,7 @@ package al.lt;
 
 import sun.reflect.generics.tree.Tree;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 
@@ -16,32 +17,42 @@ public class Entry{
 //        System.out.println(Arrays.toString(Others.maxSlidingWindow(new int[]{1,3,-1,-3,5,3,6,7}, 3)));
 
         // 修改字串的值
-        char[] q = {'b', 'c', 'w', 'a'};
-        System.out.println(Arrays.toString(q));
-        Arrays.sort(q);
-        System.out.println(Arrays.toString(q));
-        String test = "hello world";
-        char[] testChar = test.toCharArray();
-        testChar[0] = 'H';
-        String test2 = String.valueOf(testChar);
-        System.out.println(test2);
-        ArrayList<String> ww = new ArrayList<String>();
-        ww.add("qqqq");
-        ww.add("wwww");
-        System.out.println(ww);
-        Others qqq = new Others();
-        String[] qq = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        qqq.groupAnagrams(qq);
-        qqq.groupAnagrams2(qq);
-        qqq.toLowerCase("HELLO");
-        char[] aaa = {'a', 'b', 'c', 'd'};
-        qqq.reverseString(aaa);
+//        char[] q = {'b', 'c', 'w', 'a'};
+////        System.out.println(Arrays.toString(q));
+////        Arrays.sort(q);
+////        System.out.println(Arrays.toString(q));
+////        String test = "hello world";
+////        char[] testChar = test.toCharArray();
+////        testChar[0] = 'H';
+////        String test2 = String.valueOf(testChar);
+////        System.out.println(test2);
+////        ArrayList<String> ww = new ArrayList<String>();
+////        ww.add("qqqq");
+////        ww.add("wwww");
+////        System.out.println(ww);
+////        Others qqq = new Others();
+////        String[] qq = {"eat", "tea", "tan", "ate", "nat", "bat"};
+////        qqq.groupAnagrams(qq);
+////        qqq.groupAnagrams2(qq);
+////        qqq.toLowerCase("HELLO");
+////        char[] aaa = {'a', 'b', 'c', 'd'};
+////        qqq.reverseString(aaa);
 
+        Sort sort = new Sort();
+        int[] a = {4,7,6,5,3,2,8,1};
+        sort.quickSort(a, 0, a.length);
+        System.out.println(Arrays.toString(a));
+        int[] array = new int[] {7,5,6,4,3};
+        sort.heapSort(array);
     }
 }
 // 其他
 class Others{
-
+    // 8.7 找到数组中k个最大的值
+    public int findKthLargest(int[] nums, int k){
+        Arrays.sort(nums);
+        return nums[nums.length - k];
+    }
     // 8.6 反转字符串
     public void reverseString(char[] s){
         int first=0, last=s.length - 1;
@@ -417,4 +428,102 @@ class TreeNode {
         }
         return depth;
     }
+}
+
+// 排序
+class Sort{
+    // --------------------------------8.8--------------------------------
+    // （一）快速排序
+    // 1.分而治之（能否使用多线程来进行操作呢） 2. 萝卜填坑 3.这个复杂度我不会算 4. 一个index，一个pivot是写代码的关键
+    // 对于快速排序而言，关键在于partition操作
+    public void quickSort(int[] args, int startIndex, int endIndex){
+        if (startIndex >= endIndex){
+            return;
+        }
+        int index = partition2(args, startIndex, endIndex);
+        quickSort(args, startIndex, index - 1);
+        quickSort(args, index + 1, endIndex);
+    }
+    // 使左边的元素比pivot小，使右边的元素比pivot大
+    public int partition(int[] args, int startIndex, int endIndex){
+        int x = args[startIndex];
+        int i = startIndex;
+        int j = endIndex;
+        int index = startIndex;     // index始终指向坑的位置
+        while(i < j) {
+            // 这个是关键代码，注意小括号里面的条件
+            while(x < args[j] && i < j) j--; //
+            if (i < j){
+                args[i] = args[j];    //
+                index = j;
+                i++;
+
+            }
+            while(x > args[i] && i < j) i++;
+            if (i < j){
+                args[j] = args[i];
+                index = i;
+                j--;
+
+            }
+        }
+        args[index] = x;
+        return index;
+    }
+    // 交换法实现上诉partition操作
+    public int partition2(int[] args, int startIndex, int endIndex){
+        // 两个关键的地方，一个是pivot，一个是index
+        int pivot = startIndex;
+        int index = startIndex + 1;
+        for(int i = index; i < endIndex; i++){
+            if(args[i] < args[pivot]){
+                swap(args, i, index);
+                index++;
+            }
+        }
+        swap(args, pivot, index - 1);
+        return index-1;
+    }
+    public void swap(int[] args, int i, int j){
+        int tmp;
+        tmp = args[i];
+        args[i] = args[j];
+        args[j] = tmp;
+    }
+
+    // （二） 堆排序。1）堆构建：就是从第一个非负叶子节点下沉  2）因为堆顶的元素是最大，所以只需要不断的取堆顶，调整堆就能得到有序数组了
+    public void downAdjust(int[] arr, int parentIndex, int length){
+        int childIndex = parentIndex * 2 + 1;
+        int tmp = arr[parentIndex];
+        while(childIndex < length){
+            // 孩子节点的寻找
+            if((childIndex + 1) < length && arr[childIndex + 1] < arr[childIndex]){
+                childIndex++;
+            }
+            // 比较父和子节点的大小关系,这个是指tmp的指而不是arr[parentIndex];
+            if(tmp < arr[childIndex]){
+                break;
+            }
+            arr[parentIndex] = arr[childIndex];
+            parentIndex = childIndex;
+            childIndex = parentIndex * 2 + 1;
+        }
+        arr[parentIndex] = tmp;
+    }
+    public void heapSort(int[] arr){
+        // 构建堆
+        for(int i = arr.length/2; i >=0; i--){
+            downAdjust(arr, i, arr.length);
+        }
+        System.out.println(Arrays.toString(arr));
+        // 取堆顶元素，调正堆
+        for(int i = arr.length - 1; i > 0; i--){
+            int tmp = arr[0];
+            arr[0] = arr[i];
+            arr[i] = tmp;
+            downAdjust(arr, 0, i);
+        }
+        System.out.println(Arrays.toString(arr));
+    }
+
 }
